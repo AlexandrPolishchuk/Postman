@@ -1,0 +1,216 @@
+{
+	"info": {
+		"_postman_id": "62b62af8-80a3-4c6e-8f0f-3b73489e5672",
+		"name": "Task1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable (\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "login",
+							"value": "HelenKholkina",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "6677",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": "Helen",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "6677",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//structure check №2\r",
+							"pm.test(\"json structure in the response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.person.u_age).to.be.a(\"Number\");\r",
+							"    pm.expect(jsonData.person.u_name).to.be.a(\"Array\");\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.be.a(\"Number\");\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.be.a(\"Number\");\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.be.a(\"Number\");\r",
+							"    pm.expect(jsonData.start_qa_salary).to.be.a(\"Number\");\r",
+							"});\r",
+							"\r",
+							"var schema = {\r",
+							"        \"$schema\": \"https://json-schema.org/draft-04/schema#\",\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\":{\r",
+							"        \"person\": {\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\": {\r",
+							"            \"u_age\": {\"type\": \"integer\"},\r",
+							"            \"u_name\": {\"type\": \"array\",\r",
+							"            \"items\": [{\"type\": \"null\"},\r",
+							"                      {\"type\": \"integer\"},\r",
+							"                      {\"type\": \"integer\"}\r",
+							"            ]\r",
+							"            },\r",
+							"            \r",
+							"            \"u_salary_1_5_year\": {\"type\": \"integer\"}\r",
+							"    },\r",
+							"    \"required\": [\r",
+							"                \"u_age\",\r",
+							"                \"u_name\",\r",
+							"                \"u_salary_1_5_year\"\r",
+							"            ]\r",
+							"        },\r",
+							"     \"qa_salary_after_12_months\": {\"type\": \"integer\"},\r",
+							"    \"qa_salary_after_6_months\": {\"type\": \"integer\"},\r",
+							"    \"start_qa_salary\": {\"type\": \"integer\"}\r",
+							"},\r",
+							"\"required\": [\"person\",\r",
+							"    \"qa_salary_after_12_months\",\r",
+							"    \"qa_salary_after_6_months\",\r",
+							"    \"start_qa_salary\"\r",
+							"]}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var data1 = JSON.parse(responseBody);\r",
+							"    pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"*2.9\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.qa_salary_after_12_months).to.eql(jsonData.start_qa_salary*2.9);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"*4\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.person.u_salary_1_5_year).to.eql(jsonData.start_qa_salary*4);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"*2\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.qa_salary_after_6_months).to.eql(jsonData.start_qa_salary*2);\r",
+							"});\r",
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable (\"u_salary_1_5_year\", jsonData.person.u_salary_1_5_year);\r",
+							"\r",
+							"var data = {\r",
+							"    url: \"http://116.203.27.46:5002/get_test_user\",\r",
+							"    method: \"POST\",\r",
+							"    body: { mode: \"raw\", raw: JSON.stringify({ salary: \"{{u_salary_1_5_year}}\" })}\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(data, function (err, res) {\r",
+							"    console.log(err);\r",
+							"    console.log(res);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \"auth_token\": \"{{token}}\",\r\n    \"age\": 27,\r\n    \"salary\": 3500,\r\n    \"name\": \"HelenKholkina\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user_info",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user_info"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
+
