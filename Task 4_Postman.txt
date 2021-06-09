@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "02bfd092-8917-4786-a630-460a66827ec2",
+		"name": "Task4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get_test_user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"required\": [\r",
+							"        \"age\",\r",
+							"        \"family\",\r",
+							"        \"name\",\r",
+							"        \"salary\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"age\": {\"type\": \"string\"},\r",
+							"        \"family\": {\"type\": \"object\",\r",
+							"        \"required\": [\r",
+							"            \"children\",\r",
+							"            \"u_salary_1_5_year\"\r",
+							"        ],\r",
+							"        \"properties\": {\r",
+							"            \"children\": {\"type\": \"array\",\r",
+							"            \"items\": [\r",
+							"                {\"type\": \"array\",\r",
+							"                \"items\": [\r",
+							"                    {\"type\": \"string\"},\r",
+							"                    {\"type\": \"integer\"}\r",
+							"                ]},\r",
+							"                {\"type\": \"array\",\r",
+							"                \"items\": [\r",
+							"                    {\"type\": \"string\"},\r",
+							"                    {\"type\": \"integer\"}\r",
+							"                ]}\r",
+							"            ]},\r",
+							"            \"u_salary_1_5_year\": {\"type\": \"integer\"}\r",
+							"        }},\r",
+							"        \"name\": {\"type\": \"string\"},\r",
+							"        \"salary\": {\"type\": \"integer\"}\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    var data1 = JSON.parse(responseBody);\r",
+							"    pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(pm.variables.get(\"name\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"test age\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var req = request.data;\r",
+							"    pm.expect(jsonData.age).to.eql(req.age);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "salary",
+							"value": "{{u_salary_1_5_year}}",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "27",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "HelenKholkina",
+							"type": "text"
+						},
+						{
+							"key": "auth_token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/get_test_user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"get_test_user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
