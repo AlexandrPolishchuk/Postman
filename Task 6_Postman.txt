@@ -1,0 +1,125 @@
+{
+	info {
+		_postman_id 74bc68c1-2813-423d-8a5e-f3351a2d9d7a,
+		name Task6,
+		schema httpsschema.getpostman.comjsoncollectionv2.1.0collection.json
+	},
+	item [
+		{
+			name curr_byn,
+			event [
+				{
+					listen test,
+					script {
+						exec [
+							pm.test(Status code is 200, function () {r,
+							    pm.response.to.have.status(200);r,
+							});r,
+							r,
+							var schema = {r,
+							        type object,r,
+							        properties{r,
+							        person {r,
+							        type object,r,
+							        properties { Cur_Abbreviation {type string},r,
+							                        Cur_ID {type number},r,
+							                        Cur_Name {type string},r,
+							                        Cur_OfficialRate {type number},r,
+							                        Cur_Scale {type number},r,
+							                        Date {type string}r,
+							},r,
+							required [ r,
+							    Cur_Abbreviation,r,
+							    Cur_ID,r,
+							    Cur_Name,r,
+							    Cur_OfficialRate,r,
+							    Cur_Scale,r,
+							    Dater,
+							]}r,
+							        }r,
+							};r,
+							r,
+							pm.test('Schema is valid', function () {r,
+							    var data1 = JSON.parse(responseBody);r,
+							    pm.expect(tv4.validate(data1, schema)).to.be.true;r,
+							});r,
+							данные для отправки запроса в currencyr,
+							var data_currency = {r,
+							    url http116.203.27.465002currency,r,
+							    method POST,r,
+							    body { mode formdata, formdata [{ key auth_token, value pm.variables.get(token)}r,
+							    ]r,
+							     }r,
+							};r,
+							r,
+							отправка запроса в currency, вывод ответа в консоль логr,
+							pm.sendRequest(data_currency, (error, response) = {r,
+							    if (error) throw new Error(error);r,
+							    var currency = response.json()r,
+							    console.log(currency); r,
+							    рандомный выбор объекта массива из ответа currencyr,
+							    var randomElement = _.sample(currency);r,
+							    отправка в окружение значения curr_id из рандомновыбранного объектаr,
+							    postman.setEnvironmentVariable (curr_code, randomElement.Cur_ID);r,
+							    console.log(randomElement);r,
+							    console.log(randomElement.Cur_ID); r,
+							    данные для отправки запроса в curr_bynr,
+							    var data_curr_byn = {r,
+							    url http116.203.27.465002curr_byn,r,
+							    method POST,r,
+							    body { mode formdata, formdata [{ key auth_token, value pm.variables.get(token)},r,
+							                                           { key  curr_code, value pm.variables.get(curr_code)}r,
+							    ]r,
+							     }r,
+							};r,
+							отправка запроса в currency, вывод ответа в консоль логr,
+							pm.sendRequest(data_curr_byn, (error, response) = {r,
+							    if (error) throw new Error(error);r,
+							    var curr_byn = response.json();r,
+							    console.log(curr_byn);r,
+							    console.log(curr_byn.Cur_OfficialRate)r,
+							}); r,
+							});r,
+							r,
+							r,
+							r,
+							r,
+							    r,
+							
+						],
+						type textjavascript
+					}
+				}
+			],
+			request {
+				method POST,
+				header [],
+				body {
+					mode formdata,
+					formdata [
+						{
+							key auth_token,
+							value {{token}},
+							type text
+						},
+						{
+							key curr_code,
+							value {{curr_code}},
+							type text
+						}
+					]
+				},
+				url {
+					raw {{url}}curr_byn,
+					host [
+						{{url}}
+					],
+					path [
+						curr_byn
+					]
+				}
+			},
+			response []
+		}
+	]
+}
